@@ -4,9 +4,14 @@
  */
 package ventanas;
 
-import java.io.*;
-import javax.swing.JTable;
-import javax.swing.WindowConstants;
+import controlador.Conexion;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,14 +20,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GestionarCajeros extends javax.swing.JFrame {
     DefaultTableModel model = new DefaultTableModel();
-    
+    static String user_update;
     /**
      * Creates new form GestionarCajeros
      */
     public GestionarCajeros() {
         initComponents();
         
-        jTable_usuarios = new JTable(model);
+        jTable_usuarios.setModel(model);
         jScrollPane1.setViewportView(jTable_usuarios);
         
         model.addColumn("NOMBRE");
@@ -31,14 +36,27 @@ public class GestionarCajeros extends javax.swing.JFrame {
         model.addColumn("NOMBRE DE USUARIO");
         model.addColumn("CONATRASEÑA");
         
-        leer_archivo();
+        leer_datos();
         
         setTitle("Gestionar usuarios");
-        setSize(820, 400);
+        setSize(820, 415);
         setVisible(true);
         setResizable(false);
         this.setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        jTable_usuarios.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int fila_point = jTable_usuarios.rowAtPoint(e.getPoint());
+                int columna_point = 0;
+                
+                if(fila_point > -1) {
+                    user_update = (String) model.getValueAt(fila_point, columna_point);
+                    InformacionCajero informacion_usuario = new InformacionCajero();
+                    informacion_usuario.setVisible(true);
+                    dispose();
+                }
+            }
+        });
     }
 
     /**
@@ -55,8 +73,11 @@ public class GestionarCajeros extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable_usuarios = new misComponentes.MiJTable();
         jButton1 = new misComponentes.JMiBoton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(150, 190, 255));
 
@@ -67,14 +88,13 @@ public class GestionarCajeros extends javax.swing.JFrame {
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
-                {null, null, null, null},
+                {null, null, "", null},
                 {null, null, null, null}
             },
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable_usuarios.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane1.setViewportView(jTable_usuarios);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addUser.png"))); // NOI18N
@@ -96,12 +116,12 @@ public class GestionarCajeros extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(304, 304, 304)
-                        .addComponent(jLabel1)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,8 +132,22 @@ public class GestionarCajeros extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
+
+        jMenu1.setText("Opciones");
+
+        jMenuItem1.setText("Salir");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,6 +167,11 @@ public class GestionarCajeros extends javax.swing.JFrame {
         RegistrarUsuarios ru = new RegistrarUsuarios();
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        Administrador admin = new Administrador();
+        dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,34 +208,37 @@ public class GestionarCajeros extends javax.swing.JFrame {
         });
     }
     
-    public void leer_archivo(){
-        File archivo ;
-        FileReader fr ;
-        BufferedReader br ;
-
+    public void leer_datos(){
         try {
-            // Apertura del fichero y creacion de BufferedReader para poder
-            // hacer una lectura comoda (disponer del metodo readLine()).
-            archivo = new File ("Cajeros.txt");//("C:\\archivo.txt");
-            fr = new FileReader (archivo);
-            br = new BufferedReader(fr);
-
-            // Lectura del fichero
-            String linea;
-            while((linea =  br.readLine()) != null){
-                Object[] objeto = linea.split("#");
-                model.addRow(objeto);
+            Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                    Conexion.user, Conexion.password);
+            PreparedStatement pst = cn.prepareStatement(
+                "select nombre, email, telefono, username, password from cajeros");
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                Object[] fila = new Object[6];
+                
+                for (int i = 0; i < 5; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                
+                model.addRow(fila);
             }
-            br.close();
-            fr.close();
-
+            cn.close();
+        } catch (Exception e) {
+            System.err.print("Error al llenar tabla. " + e);
+            JOptionPane.showMessageDialog(null, "Error al mostrar información, Contacte al administrador");
         }
-        catch(IOException e){};
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable_usuarios;

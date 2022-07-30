@@ -8,15 +8,18 @@ import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import clases.ValidarT;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  *
  * @author FERNANDO
  */
 public class Cajero extends javax.swing.JFrame {
-
-    ValidarT vl = new ValidarT();
+    Object[] fila = new Object[2];
     DefaultTableModel model = new DefaultTableModel();
     double cuenta = 0.0;
 
@@ -61,7 +64,7 @@ public class Cajero extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(150, 190, 255));
 
@@ -188,9 +191,13 @@ public class Cajero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbCobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCobrarActionPerformed
-        // TODO add your handling code here:
+        Carga vc = new Carga(this, true);
+        vc.etiquetas("Opteniendo datos", "imprimiendo", "limpiando");
+        vc.setVisible(true);
+        
+        imprimir();
         //Limpia datos
-        model.setRowCount(0); // limpia las filas
+        model.setRowCount(0); // Elimina las filas
         cuenta = 0.00;
         jltotal.setText("TOTAL:   $" + cuenta);
     }//GEN-LAST:event_jbCobrarActionPerformed
@@ -208,7 +215,6 @@ public class Cajero extends javax.swing.JFrame {
         String producto = jtnproducto.getText();
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             if (!producto.equals("")) {
-                Object[] fila = new Object[2];
                 fila[0] = producto;
                 fila[1] = 16.00;
 
@@ -269,6 +275,38 @@ public class Cajero extends javax.swing.JFrame {
                 new Cajero().setVisible(true);
             }
         });
+    }
+    
+    public void imprimir(){
+        File f = new File("ticket.txt");
+        String ticket = "";
+        
+        for(int i = 0;i < model.getRowCount(); i++) {
+            for(int j = 0; j <model.getColumnCount(); j++){
+                ticket = ticket + model.getValueAt(i, j);
+            }
+            
+            ticket = ticket + "\n";
+        }
+
+        try{
+            FileWriter w = new FileWriter(f);
+            BufferedWriter bw = new BufferedWriter(w);
+            PrintWriter wr = new PrintWriter(bw);
+
+            wr.write("");//escribimos en el archivo
+
+            //wr.append(" - y aqui continua"); //concatenamos en el archivo sin borrar lo existente
+            wr.append(ticket);
+
+            //ahora cerramos los flujos de canales de datos, al cerrarlos el archivo quedarÃ¡ guardado con informaciÃ³n escrita
+
+            //de no hacerlo no se escribirÃ¡ nada en el archivo
+
+            wr.close();
+            bw.close();
+        }catch(IOException e){};
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

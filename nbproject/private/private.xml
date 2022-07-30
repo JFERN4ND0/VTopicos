@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/AgregarProducto.java</file>
             <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/Cajero.java</file>
+            <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/Carga.java</file>
             <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/Login.java</file>
             <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/GestionarProductos.java</file>
             <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/GestionarCajeros.java</file>
-            <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/RegistrarUsuarios.java</file>
+            <file>file:/C:/Users/FERNANDO/Documents/NetBeansProjects/VTopicos/src/ventanas/Administrador.java</file>
         </group>
     </open-files>
 </project-private>

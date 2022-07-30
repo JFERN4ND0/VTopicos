@@ -11,6 +11,7 @@ import javax.swing.JLabel;
  * @author FERNANDO
  */
 public class Carga extends javax.swing.JDialog implements Runnable{
+    String et1, et2, et3;
 
     /**
      * Creates new form Carga
@@ -25,6 +26,12 @@ public class Carga extends javax.swing.JDialog implements Runnable{
         Thread hilo = new Thread(this);
         hilo.start();
     }
+    
+    public void etiquetas(String et1, String et2, String et3) {
+        this.et1 = et1;
+        this.et2 = et2;
+        this.et3 = et3;
+     }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,6 +48,9 @@ public class Carga extends javax.swing.JDialog implements Runnable{
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("jLabel1");
+
+        jProgressBar1.setForeground(new java.awt.Color(102, 204, 255));
+        jProgressBar1.setMaximum(3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,18 +122,18 @@ public class Carga extends javax.swing.JDialog implements Runnable{
 
     @Override
     public void run() {
-        jLabel1.setText("Recibiendo parametros");
+        jLabel1.setText(et1);
        jProgressBar1.setValue(1);
        try{
        Thread.sleep(1000);
        }catch(Exception e){ }
-        jLabel1.setText("Validando acceso y password");
+        jLabel1.setText(et2);
        jProgressBar1.setValue(2);
         
        try{
        Thread.sleep(1000);
        }catch(Exception e) { }
-       jLabel1.setText("Accesando");
+       jLabel1.setText(et3);
        jProgressBar1.setValue(3);
        try{
        Thread.sleep(1000);

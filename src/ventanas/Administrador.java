@@ -4,8 +4,6 @@
  */
 package ventanas;
 
-import javax.swing.WindowConstants;
-
 /**
  *
  * @author FERNANDO
@@ -23,7 +21,6 @@ public class Administrador extends javax.swing.JFrame {
         setVisible(true);
         setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -50,7 +47,7 @@ public class Administrador extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel1.setBackground(new java.awt.Color(153, 204, 255));
@@ -197,6 +194,7 @@ public class Administrador extends javax.swing.JFrame {
 
     private void jButton_GestionarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_GestionarProductosActionPerformed
         GestionarProductos gp = new GestionarProductos();
+        gp.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton_GestionarProductosActionPerformed
 

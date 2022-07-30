@@ -4,6 +4,11 @@
  */
 package clases;
 
+import controlador.Conexion;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
 /**
  *
  * @author FERNANDO
@@ -14,6 +19,7 @@ public class Cajerol {
     private String telefono;
     private String username;
     private String password;
+    Connection con;
 
     public Cajerol() {}
 
@@ -23,6 +29,7 @@ public class Cajerol {
         this.telefono = telefono;
         this.username = username;
         this.password = password;
+        insertarCajeroBD();
     }
     
     public String getNombre() {
@@ -67,5 +74,27 @@ public class Cajerol {
     
     public String toString() {
         return String.format("%20s # %20s # %10s # %15s # %15s #\n", nombre, email, telefono, username, password);
+    }
+    
+    public void insertarCajeroBD() {
+        try{
+            con = DriverManager.getConnection( Conexion.cadenita,
+                    Conexion.user, Conexion.password);
+            PreparedStatement ps = 
+                    con.prepareStatement("insert into cajeros(nombre, email, telefono, username, password) "+
+                            " values (?, ?, ?, ?, ?) ");
+            
+            ps.setString(1, this.nombre);
+            ps.setString(2, this.email);
+            ps.setString(3, this.telefono);
+            ps.setString(4, this.username);
+            ps.setString(5, this.password);
+            
+            ps.executeUpdate();
+            
+            con.close();
+        }catch(Exception e1) {
+            System.out.println(e1.getMessage());
+        }
     }
 }

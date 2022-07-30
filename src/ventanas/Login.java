@@ -42,7 +42,7 @@ public class Login extends JFrame{
         contenedor = this.getContentPane();
         contenedor.setLayout(new GridLayout(1,2));
         
-        llogo=new JLabel();
+        llogo = new JLabel();
         llogo.setHorizontalAlignment(JLabel.CENTER);
         Image imglogo = new ImageIcon("src/images/DS.png").getImage();
         ImageIcon logo = new ImageIcon( imglogo.getScaledInstance(78, 124, Image.SCALE_SMOOTH));
@@ -95,8 +95,6 @@ public class Login extends JFrame{
         
         boton = new JMiBoton("Aceptar");
         boton.setBounds(50, 115, 100, 25);
-        boton.setForeground(new Color(0, 0, 80));
-        boton.setBorder(null);
         boton.addActionListener(new ActionListener(){
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -117,6 +115,7 @@ public class Login extends JFrame{
         String password = jpassword.getText();
         
         Carga vc = new Carga(this, true);
+        vc.etiquetas("Opteniendo datos", "Verificando datos", "Accediendo");
         vc.setVisible(true);
             
         if(usuario.compareTo("admin") == 0 && password.compareTo("admin") == 0) {
