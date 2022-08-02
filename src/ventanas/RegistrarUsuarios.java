@@ -6,8 +6,16 @@ package ventanas;
 
 import clases.Cajerol;
 import clases.ValidarT;
+import controlador.Conexion;
+import java.awt.Color;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 /**
  *
@@ -26,9 +34,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         setTitle("Registrar nuevo usuario");
         setSize(620, 350);
         setVisible(true);
-        setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -73,6 +79,11 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         txt_nombre.setForeground(new java.awt.Color(255, 255, 255));
         txt_nombre.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txt_nombre.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txt_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_nombreKeyTyped(evt);
+            }
+        });
         jPanel1.add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 210, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -161,16 +172,57 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int validacion = 0;
         String m = txt_mail.getText();
         String n = txt_nombre.getText();
         String p = txt_password.getText();
         String t = txt_telefono.getText();
         String u = txt_username.getText();
         
-        Cajerol cajeron = new Cajerol(n, m, t, u, p);
-        empleados.add(cajeron);
-        guardar();
-        Limpiar();
+        if (m.equals("")) {
+            txt_mail.setBackground(Color.red);
+            validacion ++;
+        }
+        if (u.equals("")) {
+            txt_username.setBackground(Color.red);
+            validacion ++;
+        }
+        if (p.equals("")) {
+            txt_password.setBackground(Color.red);
+            validacion ++;
+        }
+        if (n.equals("")) {
+            txt_nombre.setBackground(Color.red);
+            validacion ++;
+        }
+        if (t.equals("")) {
+            txt_telefono.setBackground(Color.red);
+            validacion ++;
+        }
+        
+        if(validacion == 0) {
+            try {
+                Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                        Conexion.user, Conexion.password);
+                PreparedStatement pst = cn.prepareStatement(
+                        "select username from cajeros where username=?");
+                pst.setString(1, u);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    txt_username.setBackground(Color.red);
+                    JOptionPane.showMessageDialog(null, "Nombre de usuario no disponible.");
+                    cn.close();
+                } else {
+                    Cajerol cajeron = new Cajerol(n, m, t, u, p);
+                    empleados.add(cajeron);
+                    guardar();
+                    Limpiar();
+                }}catch (SQLException e) {
+                    System.err.println("Error al Actualizar" + e);
+                }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debes de llenar todos los campos");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txt_telefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_telefonoKeyTyped
@@ -183,6 +235,10 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         GestionarCajeros gc = new GestionarCajeros();
         dispose();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void txt_nombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nombreKeyTyped
+        vl.validarLetras(evt);
+    }//GEN-LAST:event_txt_nombreKeyTyped
 
     /**
      * @param args the command line arguments
@@ -269,9 +325,14 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
     public void Limpiar() {
         txt_mail.setText("");
+        txt_mail.setBackground(new Color(153,153,255));
         txt_nombre.setText("");
+        txt_nombre.setBackground(new Color(153,153,255));
         txt_password.setText("");
+        txt_password.setBackground(new Color(153,153,255));
         txt_telefono.setText("");
+        txt_telefono.setBackground(new Color(153,153,255));
         txt_username.setText("");
+        txt_username.setBackground(new Color(153,153,255));
     }
 }

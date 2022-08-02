@@ -24,11 +24,11 @@ public class InformacionCajero extends javax.swing.JFrame {
             Connection cn = DriverManager.getConnection(
                     Conexion.cadenita, Conexion.user, Conexion.password);
             PreparedStatement pst = cn.prepareStatement(
-                "select id, nombre, email, telefono, username, password from cajeros where nombre = '" + user + "'");
+                "select id_cajero, nombre, email, telefono, username, password from cajeros where nombre = '" + user + "'");
             ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
-                ID = rs.getInt("id");
+                ID = rs.getInt("id_cajero");
                 
                 txt_nombre.setText(rs.getString("nombre"));
                 txt_mail.setText(rs.getString("email"));
@@ -84,7 +84,7 @@ public class InformacionCajero extends javax.swing.JFrame {
         });
         jPanel1.add(jButton_Actualizar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 200, 120, 90));
 
-        jButton_Borrar.setText("Borrar Usuario");
+        jButton_Borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/borrar.png"))); // NOI18N
         jButton_Borrar.setBorder(null);
         jButton_Borrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,7 +193,7 @@ public class InformacionCajero extends javax.swing.JFrame {
                 Connection cn = DriverManager.getConnection(
                         Conexion.cadenita, Conexion.user, Conexion.password);
                 PreparedStatement pst = cn.prepareStatement(
-                    "delete from cajeros where id = ?");
+                    "delete from cajeros where id_cajero = ?");
                 pst.setInt(1, ID);
                 pst.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Usuario eliminado");
@@ -241,11 +241,11 @@ public class InformacionCajero extends javax.swing.JFrame {
                 Connection cn = DriverManager.getConnection( Conexion.cadenita,
                     Conexion.user, Conexion.password);
                 PreparedStatement pst = cn.prepareStatement(
-                    "select username from cajeros where username = '" + username + "' and not id = '" + ID + "'");
+                    "select username from cajeros where username = '" + username + "' and not id_cajero = '" + ID + "'");
 
                 ResultSet rs = pst.executeQuery();
                 if (rs.next()) {
-                    txt_password.setBackground(Color.red);
+                    txt_username.setBackground(Color.red);
                     JOptionPane.showMessageDialog(null, "Nombre de usuario no disponible.");
                     cn.close();
                 } else {
@@ -253,7 +253,7 @@ public class InformacionCajero extends javax.swing.JFrame {
                     Conexion.user, Conexion.password);
                     PreparedStatement pst2 = cn2.prepareStatement(
                         "update cajeros set nombre=?, email=?, telefono=?, username=?, password=?"
-                        + "where id = '" + ID + "'");
+                        + "where id_cajero= '" + ID + "'");
 
                     pst2.setString(1, nombre);
                     pst2.setString(2, mail);

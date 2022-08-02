@@ -28,7 +28,7 @@ public class ValidarT {
             evt.consume();
         
         if(c == KeyEvent.VK_PERIOD)
-            c++;
+            cn++;
         
         if(!Character.isDigit(c) && c != KeyEvent.VK_PERIOD)
             evt.consume();

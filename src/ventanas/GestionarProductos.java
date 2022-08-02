@@ -4,6 +4,11 @@
  */
 package ventanas;
 
+import controlador.Conexion;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,16 +25,13 @@ public class GestionarProductos extends javax.swing.JFrame {
         jTable_Cuenta.setModel(model);
         jScrollPane1.setViewportView(jTable_Cuenta);
         
-        model.addColumn("CANTIDAD");
-        model.addColumn("PRODUCTO");
-        model.addColumn("PRECIO");
+        leer_datos();
         
-        Object[] fila = new Object[3];
-        fila[0] = 4;
-        fila[1] = "COCA-COLA 600ML";
-        fila[2] = 16.00;
+        setTitle("Gestionar Productos");
+        setSize(650, 500);
+        setResizable(false);
+        this.setLocationRelativeTo(null);
         
-        model.addRow(fila);
         jTable_Cuenta.setGridColor(new java.awt.Color(250, 0, 0));
     }
     
@@ -43,6 +45,9 @@ public class GestionarProductos extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jbBuscar = new misComponentes.JMiBoton();
         jbAgregar = new misComponentes.JMiBoton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,8 +128,22 @@ public class GestionarProductos extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
                 .addComponent(jbAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jMenu1.setText("Opciones");
+
+        jMenuItem1.setText("Salir");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -164,6 +183,11 @@ public class GestionarProductos extends javax.swing.JFrame {
         } else JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA EN EXISTENCIA");
     }//GEN-LAST:event_jbBuscarActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        Administrador admin = new Administrador();
+        dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -201,6 +225,9 @@ public class GestionarProductos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable_Cuenta;
@@ -208,4 +235,29 @@ public class GestionarProductos extends javax.swing.JFrame {
     private javax.swing.JButton jbBuscar;
     private javax.swing.JTextField jtBuscar;
     // End of variables declaration//GEN-END:variables
+
+    public void leer_datos(){
+        try {
+            Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                    Conexion.user, Conexion.password);
+            PreparedStatement pst = cn.prepareStatement(
+                "select codigo, descripcion, precio, existencia from productos");
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next()) {
+                Object[] fila = new Object[4];
+                
+                for (int i = 0; i < 4; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                
+                model.addRow(fila);
+            }
+            cn.close();
+        } catch (Exception e) {
+            System.err.print("Error al llenar tabla. " + e);
+            JOptionPane.showMessageDialog(null, "Error al mostrar información, Contacte al administrador");
+        }
+    }
 }

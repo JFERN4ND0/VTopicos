@@ -218,7 +218,7 @@ public class GestionarCajeros extends javax.swing.JFrame {
             ResultSet rs = pst.executeQuery();
             
             while(rs.next()) {
-                Object[] fila = new Object[6];
+                Object[] fila = new Object[5];
                 
                 for (int i = 0; i < 5; i++) {
                     fila[i] = rs.getObject(i + 1);

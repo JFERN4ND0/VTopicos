@@ -4,11 +4,24 @@
  */
 package ventanas;
 
+import clases.Cajerol;
+import clases.Productos;
+import clases.ValidarT;
+import controlador.Conexion;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author FERNANDO
  */
 public class AgregarProducto extends javax.swing.JFrame {
+    ValidarT vl= new ValidarT();
 
     /**
      * Creates new form AgregarProducto
@@ -16,11 +29,10 @@ public class AgregarProducto extends javax.swing.JFrame {
     public AgregarProducto() {
         initComponents();
         
-        setSize(495, 240);
+        setSize(620, 330);
         setVisible(true);
         setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     /**
@@ -32,34 +44,200 @@ public class AgregarProducto extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txt_codigo = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txt_descripcion = new javax.swing.JTextField();
+        txt_cantidad = new javax.swing.JTextField();
+        txt_precio = new javax.swing.JTextField();
+        jButton1 = new misComponentes.JMiBoton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jMenuItem1.setText("jMenuItem1");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 519, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 354, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        jPanel2.setBackground(new java.awt.Color(0, 153, 204));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Agregar productos");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, -1, -1));
+
+        txt_codigo.setBackground(new java.awt.Color(153, 153, 255));
+        txt_codigo.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        txt_codigo.setForeground(new java.awt.Color(255, 255, 255));
+        txt_codigo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_codigo.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel2.add(txt_codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 210, -1));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Código:");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Descripción:");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Cantidad:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Precio individual:");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 50, -1, -1));
+
+        txt_descripcion.setBackground(new java.awt.Color(153, 153, 255));
+        txt_descripcion.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        txt_descripcion.setForeground(new java.awt.Color(255, 255, 255));
+        txt_descripcion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_descripcion.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel2.add(txt_descripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 210, -1));
+
+        txt_cantidad.setBackground(new java.awt.Color(153, 153, 255));
+        txt_cantidad.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        txt_cantidad.setForeground(new java.awt.Color(255, 255, 255));
+        txt_cantidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_cantidad.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txt_cantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_cantidadKeyTyped(evt);
+            }
+        });
+        jPanel2.add(txt_cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 210, -1));
+
+        txt_precio.setBackground(new java.awt.Color(153, 153, 255));
+        txt_precio.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        txt_precio.setForeground(new java.awt.Color(255, 255, 255));
+        txt_precio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_precio.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txt_precio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_precioKeyTyped(evt);
+            }
+        });
+        jPanel2.add(txt_precio, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 70, 210, -1));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/agregar.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 160, 120, 100));
+
+        jMenu1.setText("Opciones");
+
+        jMenuItem2.setText("Cancelar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txt_cantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantidadKeyTyped
+        // TODO add your handling code here:
+        vl.validarPNumeros(evt);
+    }//GEN-LAST:event_txt_cantidadKeyTyped
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int validacion = 0;
+        
+        if (txt_descripcion.getText().equals("")) {
+            txt_descripcion.setBackground(Color.red);
+            validacion ++;
+        }
+        if (txt_codigo.getText().equals("")) {
+            txt_codigo.setBackground(Color.red);
+            validacion ++;
+        }
+        if (txt_cantidad.getText().equals("")) {
+            txt_cantidad.setBackground(Color.red);
+            validacion ++;
+        }
+        if (txt_precio.getText().equals("")) {
+            txt_precio.setBackground(Color.red);
+            validacion ++;
+        }
+        
+        if(validacion == 0) {
+            String d = txt_descripcion.getText();
+            String c = txt_codigo.getText();
+            int e = Integer.parseInt(txt_cantidad.getText());
+            float p = Float.parseFloat(txt_precio.getText());
+            
+             try {
+                Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                        Conexion.user, Conexion.password);
+                PreparedStatement pst = cn.prepareStatement(
+                        "select existencia from productos where codigo=? and precio=?");
+                pst.setString(1, c);
+                pst.setFloat(2, p);
+                
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    int ex = rs.getInt("existencia");
+                    int id = rs.getInt("id_producto");
+                    String codigo = rs.getString("codigo");
+                    
+                    agregar(ex, e, id, codigo);
+                    cn.close();
+                } else {
+                    Productos prod = new Productos(c, e, d, p);
+                    Limpiar();
+                }
+             }catch (SQLException exception) {
+                    System.err.println("Error al Agregar producto" + exception);
+             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debes de llenar todos los campos");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        GestionarProductos gc = new GestionarProductos();
+        gc.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void txt_precioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_precioKeyTyped
+        vl.validarNumeros(evt);
+    }//GEN-LAST:event_txt_precioKeyTyped
 
     /**
      * @param args the command line arguments
@@ -97,6 +275,46 @@ public class AgregarProducto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JTextField txt_cantidad;
+    private javax.swing.JTextField txt_codigo;
+    private javax.swing.JTextField txt_descripcion;
+    private javax.swing.JTextField txt_precio;
     // End of variables declaration//GEN-END:variables
+
+    public void Limpiar() {
+        txt_codigo.setText("");
+        txt_cantidad.setText("");
+        txt_descripcion.setText("");
+        txt_precio.setText("");
+    }
+    
+    public void agregar(int ex, int exn,  int id_producto, String codigo) {
+        try{
+            Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                    Conexion.user, Conexion.password);
+            PreparedStatement ps = 
+                    cn.prepareStatement("update productos set existencia=? where id =? and clave=?");
+            
+            ps.setInt(1, ex + exn);
+            ps.setInt(2, id_producto);
+            ps.setString(3, codigo);
+            ps.executeUpdate();
+            
+            cn.close();
+        }catch(Exception e1) {
+            System.out.println(e1.getMessage());
+        }
+    }
 }
