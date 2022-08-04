@@ -67,7 +67,7 @@ public class Productos {
                     Conexion.user, Conexion.password);
             PreparedStatement ps = 
                     cn.prepareStatement("insert into productos(codigo, existencia, descripcion, precio) "+
-                            " values (?, ?, ?, ?, ?)");
+                            " values (?, ?, ?, ?)");
             
             ps.setString(1, codigo);
             ps.setInt(2, this.existencia);

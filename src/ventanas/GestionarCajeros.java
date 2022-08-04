@@ -34,12 +34,12 @@ public class GestionarCajeros extends javax.swing.JFrame {
         model.addColumn("EMAIL");
         model.addColumn("TELEFONO");
         model.addColumn("NOMBRE DE USUARIO");
-        model.addColumn("CONATRASEÑA");
+        model.addColumn("ESTADO");
         
-        leer_datos();
+        leer_datos_Cajeros();
         
         setTitle("Gestionar usuarios");
-        setSize(820, 415);
+        setSize(820, 510);
         setVisible(true);
         setResizable(false);
         this.setLocationRelativeTo(null);
@@ -51,9 +51,16 @@ public class GestionarCajeros extends javax.swing.JFrame {
                 
                 if(fila_point > -1) {
                     user_update = (String) model.getValueAt(fila_point, columna_point);
-                    InformacionCajero informacion_usuario = new InformacionCajero();
-                    informacion_usuario.setVisible(true);
-                    dispose();
+                    
+                    if (cmb_ver.getSelectedIndex() + 1 == 1) {
+                        InformacionCajero informacion_usuario = new InformacionCajero();
+                        informacion_usuario.setVisible(true);
+                        dispose();
+                    }else if (cmb_ver.getSelectedIndex() + 1 == 2) {
+                        InformacionAdministrador infoadmin = new InformacionAdministrador();
+                        infoadmin.setVisible(true);
+                        dispose();
+                    }
                 }
             }
         });
@@ -68,7 +75,9 @@ public class GestionarCajeros extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
+        cmb_ver = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable_usuarios = new misComponentes.MiJTable();
@@ -77,11 +86,21 @@ public class GestionarCajeros extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(150, 190, 255));
 
+        cmb_ver.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cajeros", "Administradores" }));
+        cmb_ver.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmb_verItemStateChanged(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Cajeros registrados");
 
         jTable_usuarios.setModel(new javax.swing.table.DefaultTableModel(
@@ -110,17 +129,19 @@ public class GestionarCajeros extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(346, 346, 346))
+                .addGap(345, 345, 345))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(304, 304, 304)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmb_ver, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -128,11 +149,13 @@ public class GestionarCajeros extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(25, 25, 25)
+                .addGap(33, 33, 33)
+                .addComponent(cmb_ver, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(28, 28, 28)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addGap(34, 34, 34))
         );
 
         jMenu1.setText("Opciones");
@@ -164,14 +187,30 @@ public class GestionarCajeros extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        RegistrarUsuarios ru = new RegistrarUsuarios();
-        dispose();
+        if (cmb_ver.getSelectedIndex() + 1 == 1) {
+            RegistrarUsuarios ru = new RegistrarUsuarios();
+            dispose();
+        } else if (cmb_ver.getSelectedIndex() + 1 == 2) {
+            RegistrarAdministradores ra = new RegistrarAdministradores();
+            dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         Administrador admin = new Administrador();
         dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void cmb_verItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_verItemStateChanged
+        // TODO add your handling code here:
+        if (cmb_ver.getSelectedIndex() + 1 == 1) {
+            jLabel1.setText("Cajeros registrados");
+            leer_datos_Cajeros();
+        } else if (cmb_ver.getSelectedIndex() + 1 == 2) {
+            jLabel1.setText("Administradores registrados");
+            leer_datos_Administradores();
+        }
+    }//GEN-LAST:event_cmb_verItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -208,18 +247,18 @@ public class GestionarCajeros extends javax.swing.JFrame {
         });
     }
     
-    public void leer_datos(){
+    public void leer_datos_Cajeros(){
         try {
             Connection cn = DriverManager.getConnection( Conexion.cadenita,
                     Conexion.user, Conexion.password);
             PreparedStatement pst = cn.prepareStatement(
-                "select nombre, email, telefono, username, password from cajeros");
+                "select nombre, email, telefono, username, estado from cajeros");
             
             ResultSet rs = pst.executeQuery();
             
+            model.setRowCount(0);
             while(rs.next()) {
                 Object[] fila = new Object[5];
-                
                 for (int i = 0; i < 5; i++) {
                     fila[i] = rs.getObject(i + 1);
                 }
@@ -234,7 +273,9 @@ public class GestionarCajeros extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmb_ver;
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
@@ -243,4 +284,29 @@ public class GestionarCajeros extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable_usuarios;
     // End of variables declaration//GEN-END:variables
+
+    public void leer_datos_Administradores(){
+        try {
+            Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                    Conexion.user, Conexion.password);
+            PreparedStatement pst = cn.prepareStatement(
+                "select nombre, email, telefono, username, estado from Administradores");
+            
+            ResultSet rs = pst.executeQuery();
+            
+            model.setRowCount(0);
+            while(rs.next()) {
+                Object[] fila = new Object[5];
+                for (int i = 0; i < 5; i++) {
+                    fila[i] = rs.getObject(i + 1);
+                }
+                
+                model.addRow(fila);
+            }
+            cn.close();
+        } catch (Exception e) {
+            System.err.print("Error al llenar tabla. " + e);
+            JOptionPane.showMessageDialog(null, "Error al mostrar información, Contacte al administrador");
+        }
+    }
 }

@@ -136,30 +136,42 @@ public class Login extends JFrame{
         }*/
         
         if(!usuario.equals("") || !password.equals("")) {
+            String estado;
             try {
                 Connection cn = DriverManager.getConnection( Conexion.cadenita,
                     Conexion.user, Conexion.password);
                 PreparedStatement pst = cn.prepareStatement(
-                    "select nombre, id_cajero from cajeros where username = '" + usuario
+                    "select nombre, estado from cajeros where username = '" + usuario
                         + "' and password = '" + password + "'");
                 
                 ResultSet rs = pst.executeQuery();
+                
                 if(rs.next()) {
+                    estado = rs.getString("estado");
                     cn.close();
-                    Cajero cajero = new Cajero();
-                    dispose();
+                    if(estado.equalsIgnoreCase("Activo")){
+                        Cajero cajero = new Cajero();
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cuenta Suspendida");
+                    }
                 }else {
                     try {
                         Connection cn2 = DriverManager.getConnection( Conexion.cadenita,
                                 Conexion.user, Conexion.password);
                         PreparedStatement pst2 = cn.prepareStatement(
-                                "select username, id_admin from admin where username = '" + usuario
+                                "select username, estado from administradores where username = '" + usuario
                                         + "' and password = '" + password + "'");
                         ResultSet rs2 = pst2.executeQuery();
                         if(rs2.next()) {
+                            estado = rs2.getString("estado");
                             cn2.close();
-                            Administrador admin = new Administrador();
-                            dispose();
+                            if(estado.equalsIgnoreCase("Activo")){
+                                Administrador admin = new Administrador();
+                                dispose();
+                            }else {
+                                JOptionPane.showMessageDialog(null, "Cuenta Suspendida");
+                            }
                         } else {
                             JOptionPane.showMessageDialog(null, "Datos de acceso incorrectos");
                             txtnombre.setText("");
@@ -174,7 +186,6 @@ public class Login extends JFrame{
                 System.err.println("Error en el botón Acceder. " + e);
                 JOptionPane.showMessageDialog(null, "¡¡Error al iniciar sesión!!, contacte al administrador.");
             }
-        }
-        
+        }   
     }
 }

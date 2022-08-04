@@ -16,7 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
 /**
  *
  * @author FERNANDO
@@ -47,6 +46,8 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        cmb_estatus = new javax.swing.JComboBox<>();
+        jLabel_Nombre5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txt_nombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -68,6 +69,14 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        cmb_estatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+        jPanel1.add(cmb_estatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 190, -1, -1));
+
+        jLabel_Nombre5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel_Nombre5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel_Nombre5.setText("Estatus:");
+        jPanel1.add(jLabel_Nombre5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 190, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -172,12 +181,13 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int validacion = 0;
+        int validacion = 0, estatus_cmb= cmb_estatus.getSelectedIndex() + 1;
         String m = txt_mail.getText();
         String n = txt_nombre.getText();
         String p = txt_password.getText();
         String t = txt_telefono.getText();
         String u = txt_username.getText();
+        String estado = "";
         
         if (m.equals("")) {
             txt_mail.setBackground(Color.red);
@@ -201,6 +211,11 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
         }
         
         if(validacion == 0) {
+            if (estatus_cmb == 1) {
+                estado = "Activo";
+            } else if (estatus_cmb == 2) {
+                estado = "Inactivo";
+            }
             try {
                 Connection cn = DriverManager.getConnection( Conexion.cadenita,
                         Conexion.user, Conexion.password);
@@ -213,7 +228,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Nombre de usuario no disponible.");
                     cn.close();
                 } else {
-                    Cajerol cajeron = new Cajerol(n, m, t, u, p);
+                    Cajerol cajeron = new Cajerol(n, m, t, u, p, estado);
                     empleados.add(cajeron);
                     guardar();
                     Limpiar();
@@ -305,6 +320,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmb_estatus;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -312,6 +328,7 @@ public class RegistrarUsuarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel_Nombre5;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;

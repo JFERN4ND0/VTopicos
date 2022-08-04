@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
  */
 public class ValidarT {
     Character c;
-    int cn = 0;
+    public static int cn = 0;
     
     public void validarLetras(KeyEvent evt) {
         c = evt.getKeyChar();
@@ -22,6 +22,7 @@ public class ValidarT {
     }
     
     public void validarNumeros(KeyEvent evt) {
+        //cn = AgregarProducto.val;
         c = evt.getKeyChar();
         
         if(cn != 0 && c == KeyEvent.VK_PERIOD)

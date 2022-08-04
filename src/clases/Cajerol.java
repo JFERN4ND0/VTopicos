@@ -19,16 +19,18 @@ public class Cajerol {
     private String telefono;
     private String username;
     private String password;
+    private String estado;
     Connection con;
 
     public Cajerol() {}
 
-    public Cajerol(String nombre, String email, String telefono, String username, String password) {
+    public Cajerol(String nombre, String email, String telefono, String username, String password, String estado) {
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
         this.username = username;
         this.password = password;
+        this.estado = estado;
         insertarCajeroBD();
     }
     
@@ -71,9 +73,13 @@ public class Cajerol {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    public String toString() {
-        return String.format("%20s # %20s # %10s # %15s # %15s #\n", nombre, email, telefono, username, password);
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
     
     public void insertarCajeroBD() {
@@ -81,14 +87,15 @@ public class Cajerol {
             con = DriverManager.getConnection( Conexion.cadenita,
                     Conexion.user, Conexion.password);
             PreparedStatement ps = 
-                    con.prepareStatement("insert into cajeros(nombre, email, telefono, username, password) "+
-                            " values (?, ?, ?, ?, ?) ");
+                    con.prepareStatement("insert into cajeros(nombre, email, telefono, username, password, estado) "+
+                            " values (?, ?, ?, ?, ?, ?) ");
             
             ps.setString(1, this.nombre);
             ps.setString(2, this.email);
             ps.setString(3, this.telefono);
             ps.setString(4, this.username);
             ps.setString(5, this.password);
+            ps.setString(6, this.estado);
             
             ps.executeUpdate();
             

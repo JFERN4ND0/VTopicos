@@ -17,13 +17,23 @@ import javax.swing.table.DefaultTableModel;
  * @author FERNANDO
  */
 public class GestionarProductos extends javax.swing.JFrame {
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
     
     public GestionarProductos() {
         initComponents();
         
-        jTable_Cuenta.setModel(model);
-        jScrollPane1.setViewportView(jTable_Cuenta);
+        jTable_Productos.setModel(model);
+        jScrollPane1.setViewportView(jTable_Productos);
+        
+        model.addColumn("CODIGO");
+        model.addColumn("DESCRIPCIÓN");
+        model.addColumn("PRECIO");
+        model.addColumn("EXISTENCIA");
         
         leer_datos();
         
@@ -31,8 +41,6 @@ public class GestionarProductos extends javax.swing.JFrame {
         setSize(650, 500);
         setResizable(false);
         this.setLocationRelativeTo(null);
-        
-        jTable_Cuenta.setGridColor(new java.awt.Color(250, 0, 0));
     }
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -40,7 +48,7 @@ public class GestionarProductos extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable_Cuenta = new misComponentes.MiJTable();
+        jTable_Productos = new misComponentes.MiJTable();
         jtBuscar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jbBuscar = new misComponentes.JMiBoton();
@@ -49,13 +57,12 @@ public class GestionarProductos extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(150, 190, 255));
 
-        jTable_Cuenta.setBackground(new java.awt.Color(153, 255, 255));
-        jTable_Cuenta.setForeground(new java.awt.Color(102, 102, 102));
-        jTable_Cuenta.setModel(new javax.swing.table.DefaultTableModel(
+        jTable_Productos.setForeground(new java.awt.Color(102, 102, 102));
+        jTable_Productos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -66,8 +73,8 @@ public class GestionarProductos extends javax.swing.JFrame {
                 "CANTIDAD", "PRODUCTO", "PRECIO"
             }
         ));
-        jTable_Cuenta.setGridColor(new java.awt.Color(204, 255, 255));
-        jScrollPane1.setViewportView(jTable_Cuenta);
+        jTable_Productos.setCellEditor(jTable_Productos.getCellEditor());
+        jScrollPane1.setViewportView(jTable_Productos);
 
         jtBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,21 +173,42 @@ public class GestionarProductos extends javax.swing.JFrame {
     private void jbAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAgregarActionPerformed
         // TODO add your handling code here:
         AgregarProducto ap = new AgregarProducto();
+        dispose();
     }//GEN-LAST:event_jbAgregarActionPerformed
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
         // TODO add your handling code here:
         String producto = jtBuscar.getText();
         if(!producto.equals("")) {
-            model.setRowCount(0);
-            
-            Object[] fila = new Object[3];
-            fila[0] = 5;
-            fila[1] = producto;
-            fila[2] = 16.00;
-            
-            model.addRow(fila);
-        } else JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA EN EXISTENCIA");
+           try {
+               Carga vc = new Carga(this, true);
+               vc.etiquetas("Opteniendo datos", "Buscando", "Buscando");
+               vc.setVisible(true);
+               
+               Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                       Conexion.user, Conexion.password);
+               PreparedStatement pst = cn.prepareStatement(
+                       "select codigo, descripcion, precio, existencia from productos where codigo like '%"
+                               + producto + "%' or descripcion like '%" + producto + "%'");
+               
+               ResultSet rs = pst.executeQuery();
+               
+               model.setRowCount(0);
+               while(rs.next()) {
+                   Object[] fila = new Object[4];
+                   
+                   for (int i = 0; i < 4; i++) {
+                       fila[i] = rs.getObject(i + 1);
+                   }
+                   
+                   model.addRow(fila);
+               }
+                cn.close();
+           } catch (Exception e) {
+               System.err.print("Error al llenar tabla. " + e);
+               JOptionPane.showMessageDialog(null, "Error al mostrar información, Contacte al administrador");
+           }
+        }
     }//GEN-LAST:event_jbBuscarActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -230,7 +258,7 @@ public class GestionarProductos extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable_Cuenta;
+    private javax.swing.JTable jTable_Productos;
     private javax.swing.JButton jbAgregar;
     private javax.swing.JButton jbBuscar;
     private javax.swing.JTextField jtBuscar;

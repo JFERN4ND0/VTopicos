@@ -4,7 +4,6 @@
  */
 package ventanas;
 
-import clases.Cajerol;
 import clases.Productos;
 import clases.ValidarT;
 import controlador.Conexion;
@@ -22,6 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class AgregarProducto extends javax.swing.JFrame {
     ValidarT vl= new ValidarT();
+    //static int val=0;
 
     /**
      * Creates new form AgregarProducto
@@ -205,7 +205,7 @@ public class AgregarProducto extends javax.swing.JFrame {
                 Connection cn = DriverManager.getConnection( Conexion.cadenita,
                         Conexion.user, Conexion.password);
                 PreparedStatement pst = cn.prepareStatement(
-                        "select existencia from productos where codigo=? and precio=?");
+                        "select existencia, id_producto, codigo from productos where codigo=? and precio=?");
                 pst.setString(1, c);
                 pst.setFloat(2, p);
                 
@@ -232,6 +232,7 @@ public class AgregarProducto extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         GestionarProductos gc = new GestionarProductos();
         gc.setVisible(true);
+        ValidarT.cn = 0;
         dispose();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
@@ -298,6 +299,7 @@ public class AgregarProducto extends javax.swing.JFrame {
         txt_cantidad.setText("");
         txt_descripcion.setText("");
         txt_precio.setText("");
+        ValidarT.cn = 0;
     }
     
     public void agregar(int ex, int exn,  int id_producto, String codigo) {

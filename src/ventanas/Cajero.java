@@ -4,6 +4,7 @@
  */
 package ventanas;
 
+import controlador.Conexion;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -13,6 +14,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -38,6 +43,7 @@ public class Cajero extends javax.swing.JFrame {
         jTable_Cuenta = new JTable(model);
         jScrollPane1.setViewportView(jTable_Cuenta);
 
+        model.addColumn("CODIGO");
         model.addColumn("PRODUCTO");
         model.addColumn("PRECIO");
     }
@@ -215,13 +221,35 @@ public class Cajero extends javax.swing.JFrame {
         String producto = jtnproducto.getText();
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             if (!producto.equals("")) {
-                fila[0] = producto;
-                fila[1] = 16.00;
-
-                cuenta = cuenta + 16.00;
-                jltotal.setText("TOTAL:   $" + cuenta);
-
-                model.addRow(fila);
+                try {
+                    Carga vc = new Carga(this, true);
+                    vc.etiquetas("Opteniendo datos", "Buscando", "Buscando");
+                    vc.setVisible(true);
+                    
+                    Connection cn = DriverManager.getConnection( Conexion.cadenita,
+                            Conexion.user, Conexion.password);
+                    
+                    PreparedStatement pst = cn.prepareStatement(
+                            "select codigo, descripcion, precio from productos where codigo like '%"
+                                    + producto + "%' or descripcion like '%" + producto + "%'");
+                    
+                    ResultSet rs = pst.executeQuery();
+                    
+                    while(rs.next()) {
+                        Object[] fila = new Object[3];
+                        for (int i = 0; i < 3; i++) {
+                            fila[i] = rs.getObject(i + 1);
+                        }
+                       
+                        cuenta = cuenta+ rs.getDouble("precio");
+                        model.addRow(fila);
+                    }
+                    jltotal.setText("TOTAL:   $" + cuenta);
+                    cn.close();
+                } catch (Exception e) {
+                    System.err.print("Error al llenar tabla. " + e);
+                    JOptionPane.showMessageDialog(null, "Error al mostrar información, Contacte al administrador");
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "INTRODUCE UN PRODUCTO");
             }
@@ -283,7 +311,7 @@ public class Cajero extends javax.swing.JFrame {
         
         for(int i = 0;i < model.getRowCount(); i++) {
             for(int j = 0; j <model.getColumnCount(); j++){
-                ticket = ticket + model.getValueAt(i, j);
+                ticket = ticket + model.getValueAt(i, j) + "\t";
             }
             
             ticket = ticket + "\n";

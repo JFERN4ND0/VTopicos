@@ -24,7 +24,7 @@ public class InformacionCajero extends javax.swing.JFrame {
             Connection cn = DriverManager.getConnection(
                     Conexion.cadenita, Conexion.user, Conexion.password);
             PreparedStatement pst = cn.prepareStatement(
-                "select id_cajero, nombre, email, telefono, username, password from cajeros where nombre = '" + user + "'");
+                "select id_cajero, nombre, email, telefono, username, password, estado from cajeros where nombre = '" + user + "'");
             ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
@@ -35,6 +35,7 @@ public class InformacionCajero extends javax.swing.JFrame {
                 txt_telefono.setText(rs.getString("telefono"));
                 txt_username.setText(rs.getString("username"));
                 txt_password.setText(rs.getString("password"));
+                cmb_estatus.setSelectedItem(rs.getString("estado"));
             }
             cn.close();
         } catch (SQLException e) {
@@ -53,6 +54,8 @@ public class InformacionCajero extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        cmb_estatus = new javax.swing.JComboBox<>();
+        jLabel_Nombre6 = new javax.swing.JLabel();
         jButton_Actualizar1 = new misComponentes.JMiBoton();
         jButton_Borrar = new misComponentes.JMiBoton();
         jLabel_Titulo = new javax.swing.JLabel();
@@ -74,6 +77,14 @@ public class InformacionCajero extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        cmb_estatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+        jPanel1.add(cmb_estatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, -1, -1));
+
+        jLabel_Nombre6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel_Nombre6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel_Nombre6.setText("Estatus:");
+        jPanel1.add(jLabel_Nombre6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, -1, -1));
 
         jButton_Actualizar1.setText("Actualizar Usuario");
         jButton_Actualizar1.setBorder(null);
@@ -207,8 +218,8 @@ public class InformacionCajero extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_BorrarActionPerformed
 
     private void jButton_Actualizar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Actualizar1ActionPerformed
-        int validacion = 0;
-        String nombre, mail, telefono, username, pass;
+        int validacion = 0, estatus_cmb= cmb_estatus.getSelectedIndex() + 1;
+        String nombre, mail, telefono, username, pass, estado = "";;
 
         mail = txt_mail.getText().trim();
         username = txt_username.getText().trim();
@@ -237,6 +248,11 @@ public class InformacionCajero extends javax.swing.JFrame {
             validacion ++;
         }
         if (validacion == 0) {
+            if (estatus_cmb == 1) {
+                estado = "Activo";
+            } else if (estatus_cmb == 2) {
+                estado = "Inactivo";
+            }
             try {
                 Connection cn = DriverManager.getConnection( Conexion.cadenita,
                     Conexion.user, Conexion.password);
@@ -252,7 +268,7 @@ public class InformacionCajero extends javax.swing.JFrame {
                     Connection cn2 = DriverManager.getConnection( Conexion.cadenita,
                     Conexion.user, Conexion.password);
                     PreparedStatement pst2 = cn2.prepareStatement(
-                        "update cajeros set nombre=?, email=?, telefono=?, username=?, password=?"
+                        "update cajeros set nombre=?, email=?, telefono=?, username=?, password=?, estado=?" 
                         + "where id_cajero= '" + ID + "'");
 
                     pst2.setString(1, nombre);
@@ -260,6 +276,7 @@ public class InformacionCajero extends javax.swing.JFrame {
                     pst2.setString(3, telefono);
                     pst2.setString(4, username);
                     pst2.setString(5, pass);
+                    pst2.setString(6, estado);
 
                     pst2.executeUpdate();
                     cn2.close();
@@ -317,10 +334,12 @@ public class InformacionCajero extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmb_estatus;
     private javax.swing.JButton jButton_Actualizar1;
     private javax.swing.JButton jButton_Borrar;
     private javax.swing.JLabel jLabel_Nombre;
     private javax.swing.JLabel jLabel_Nombre5;
+    private javax.swing.JLabel jLabel_Nombre6;
     private javax.swing.JLabel jLabel_Titulo;
     private javax.swing.JLabel jLabel_mail;
     private javax.swing.JLabel jLabel_telefono;
