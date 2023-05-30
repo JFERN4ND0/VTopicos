@@ -10,6 +10,8 @@ package controlador;
  */
 public class Conexion {
     public static String user = "root";
-    public static String password = "Fer_9514670422";
-    public static String cadenita = "jdbc:mysql://localhost:3306/vtopicos";
+    //public static String password = "Fer_9514670422";
+    public static String password = "";
+    //public static String cadenita = "jdbc:mysql://localhost:3306/vtopicos";
+    public static String cadenita = "jdbc:mysql://localhost/vtopicos";
 }
