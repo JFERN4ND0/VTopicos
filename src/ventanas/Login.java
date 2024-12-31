@@ -82,7 +82,7 @@ public class Login extends JFrame{
                 lpassword.getHeight(), Image.SCALE_DEFAULT));
         lpassword.setIcon(ipass);
         
-        jpassword = new JPasswordField("123456");
+        jpassword = new JPasswordField("usuario");
         jpassword.setBounds(20, 3, 135, 20);
         
         pnombre = new JPanel();

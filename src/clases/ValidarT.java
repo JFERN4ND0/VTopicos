@@ -21,7 +21,7 @@ public class ValidarT {
             evt.consume();
     }
     
-    public void validarNumeros(KeyEvent evt) {
+    public void validarNumerosPrecios(KeyEvent evt) {
         //cn = AgregarProducto.val;
         c = evt.getKeyChar();
         

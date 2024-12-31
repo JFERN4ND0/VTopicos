@@ -153,6 +153,11 @@ public class InformacionCajero extends javax.swing.JFrame {
         txt_telefono.setForeground(new java.awt.Color(255, 255, 255));
         txt_telefono.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txt_telefono.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txt_telefono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_telefonoActionPerformed(evt);
+            }
+        });
         jPanel1.add(txt_telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 210, -1));
 
         txt_password.setBackground(new java.awt.Color(153, 153, 255));
@@ -297,6 +302,10 @@ public class InformacionCajero extends javax.swing.JFrame {
         GestionarCajeros gc = new GestionarCajeros();
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void txt_telefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_telefonoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_telefonoActionPerformed
 
     /**
      * @param args the command line arguments

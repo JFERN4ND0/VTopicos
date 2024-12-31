@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  * @author FERNANDO
  */
 public class AgregarProducto extends javax.swing.JFrame {
-    ValidarT vl= new ValidarT();
+    //ValidarT vl= new ValidarT();
     //static int val=0;
 
     /**
@@ -172,6 +172,7 @@ public class AgregarProducto extends javax.swing.JFrame {
 
     private void txt_cantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantidadKeyTyped
         // TODO add your handling code here:
+        ValidarT vl= new ValidarT();
         vl.validarPNumeros(evt);
     }//GEN-LAST:event_txt_cantidadKeyTyped
 
@@ -237,7 +238,8 @@ public class AgregarProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void txt_precioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_precioKeyTyped
-        vl.validarNumeros(evt);
+        ValidarT vl= new ValidarT();
+        vl.validarNumerosPrecios(evt);
     }//GEN-LAST:event_txt_precioKeyTyped
 
     /**
